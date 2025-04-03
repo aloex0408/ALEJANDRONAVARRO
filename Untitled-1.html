@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro y Verificación de Usuario</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #6a11cb, #2575fc); /* Fondo llamativo y elegante con gradiente */
+            color: #ffffff; /* Texto blanco para buen contraste */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.7); /* Fondo semitransparente oscuro */
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8); /* Sombra destacada */
+            width: 350px;
+            text-align: center;
+            display: flex;
+            flex-direction: column; /* Alinea elementos verticalmente */
+            justify-content: center; /* Centra verticalmente los campos */
+        }
+        input, button {
+            width: 90%;
+            margin: 10px auto; /* Centra el botón horizontalmente */
+            padding: 12px;
+            border: 1px solid #ddd; /* Bordes claros */
+            border-radius: 6px;
+            background-color: rgba(255, 255, 255, 0.1); /* Fondo translúcido */
+            color: #ffffff; /* Texto blanco */
+        }
+        input::placeholder {
+            color: #b0c4de; /* Color tenue para placeholders */
+        }
+        button {
+            background-color: #f39c12; /* Naranja vibrante */
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #d35400; /* Naranja más oscuro al pasar el cursor */
+        }
+        h2 {
+            margin-bottom: 20px;
+            font-size: 1.6em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Registrar Usuario</h2>
+        <form id="registerForm">
+            <input type="text" id="newUsername" placeholder="Nuevo Usuario" required>
+            <input type="password" id="newPassword" placeholder="Nueva Contraseña" required>
+            <button type="button" onclick="registerUser()">Registrar</button>
+        </form>
+
+        <button id="checkUserBtn" onclick="checkUser()">iniciar</button>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'qwwq.database.windows.net'; // URL del servidor o backend que interactúa con Azure SQL
+
+        async function registerUser() {
+            const username = document.getElementById('newUsername').value;
+            const password = document.getElementById('newPassword').value;
+
+            const response = await fetch(`${API_BASE_URL}/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            if (response.ok) {
+                alert('Usuario registrado correctamente');
+            } else {
+                alert('Error al registrar usuario');
+            }
+        }
+
+        async function checkUser() {
+            const username = document.getElementById('newUsername').value;
+
+            const response = await fetch(`${API_BASE_URL}/checkUser`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username })
+            });
+
+            const result = await response.json();
+            if (result.exists) {
+                alert('El usuario existe');
+                // Aquí puedes mostrar un nuevo botón si el usuario existe
+                const button = document.createElement('button');
+                button.textContent = 'Usuario Confirmado';
+                document.querySelector('.container').appendChild(button);
+            } else {
+                alert('El usuario no existe');
+            }
+        }
+    </script>
+</body>
+</html>
